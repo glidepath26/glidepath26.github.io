@@ -1,2 +1,258 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Dami Ige</title></head>
-<body><h1>Dami Ige</h1><p>Personal software projects, including GlidePath, a personal trading tool for my own accounts.</p></body></html>
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GlidePath — a personal trading-discipline project</title>
+  <meta name="description" content="GlidePath is a personal software project by Dami Ige: a risk-first trading engine that executes rule-based strategies on my own accounts with hard limits and human approval.">
+  <meta name="theme-color" content="#0B0E14">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0E14;
+      --panel: #11151D;
+      --raised: #161B25;
+      --border: #1D2330;
+      --border-hi: #2A3242;
+      --text: #C8CFDA;
+      --bright: #E8ECF2;
+      --muted: #6B7686;
+      --gold: #E8B33C;
+      --gold-dim: #E8B33C22;
+      --profit: #3FB68B;
+      --loss: #E0566B;
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 16px/1.65 Inter, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 10; background: #0B0E14E6; backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .bar { height: 60px; display: flex; align-items: center; gap: 12px; }
+    .mark { width: 30px; height: 30px; border: 1px solid #81682c; border-radius: 6px; display: grid; place-items: center; color: var(--gold); font: 700 11px "JetBrains Mono", monospace; background: #1b1920; }
+    .brand { font-weight: 700; letter-spacing: .16em; font-size: 13px; color: var(--bright); }
+    .brand span { color: var(--muted); font-weight: 500; letter-spacing: .08em; margin-left: 8px; font-size: 11px; }
+    nav { margin-left: auto; display: flex; gap: 22px; font-size: 13px; }
+    nav a { color: var(--muted); }
+    nav a:hover { color: var(--text); text-decoration: none; }
+
+    /* Hero */
+    .hero { padding-top: 96px; padding-bottom: 72px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+    .eyebrow { font: 500 11px "JetBrains Mono", monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+    h1 { margin: 14px 0 18px; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; letter-spacing: -.02em; color: var(--bright); font-weight: 700; }
+    h1 em { font-style: normal; color: var(--gold); }
+    .lede { font-size: 18px; color: var(--text); max-width: 34em; margin: 0; }
+    .note { margin-top: 22px; display: inline-flex; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); border: 1px solid var(--border); background: var(--panel); padding: 8px 12px; border-radius: 6px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--profit); box-shadow: 0 0 8px #3fb68b88; flex: none; }
+
+    /* Glide path card */
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .card-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font: 600 10px Inter; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+    .card-head b { color: var(--gold); font: 500 11px "JetBrains Mono", monospace; letter-spacing: 0; }
+    .chart { display: block; width: 100%; height: auto; }
+    .chart .grid path { stroke: #1b212c; }
+    .chart .axis { fill: #55606f; font: 10px "JetBrains Mono", monospace; }
+    .chart .curve { fill: none; stroke: var(--gold); stroke-width: 2.2; }
+    .chart .glow { fill: none; stroke: #e8b33c1c; stroke-width: 12; }
+    .chart .target { stroke: var(--profit); stroke-dasharray: 4 4; }
+    .chart .tlabel { fill: var(--profit); font: 10px "JetBrains Mono", monospace; }
+    .chart .zone { fill: #46505f; font: 600 9px Inter; letter-spacing: .12em; }
+    .card-foot { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); }
+    .card-foot div { padding: 12px 16px; border-right: 1px solid var(--border); }
+    .card-foot div:last-child { border-right: 0; }
+    .k { font: 600 9px Inter; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+    .v { font: 500 15px "JetBrains Mono", monospace; color: var(--bright); margin-top: 4px; }
+
+    /* Sections */
+    section { padding: 72px 0; border-top: 1px solid var(--border); }
+    h2 { font-size: 13px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+    .h2-big { font-size: clamp(24px, 3vw, 32px); color: var(--bright); letter-spacing: -.01em; margin: 0 0 18px; font-weight: 650; line-height: 1.2; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    p { margin: 0 0 14px; }
+
+    /* Pipeline */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 28px; counter-reset: step; }
+    .step { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 18px; position: relative; }
+    .step::before { counter-increment: step; content: "0" counter(step); font: 500 11px "JetBrains Mono", monospace; color: var(--gold); }
+    .step h3 { margin: 8px 0 8px; font-size: 16px; color: var(--bright); font-weight: 600; }
+    .step p { font-size: 14px; color: var(--text); margin: 0; }
+    .step:not(:last-child)::after { content: "→"; position: absolute; right: -11px; top: 50%; transform: translateY(-50%); color: var(--border-hi); font-size: 14px; }
+
+    /* Principles */
+    .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 28px; }
+    .rule { background: var(--panel); padding: 22px; }
+    .rule .k { color: var(--gold); }
+    .rule h3 { margin: 8px 0 6px; font-size: 15px; color: var(--bright); font-weight: 600; }
+    .rule p { font-size: 14px; margin: 0; color: var(--text); }
+
+    /* Stack & status */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chip { font: 500 12px "JetBrains Mono", monospace; color: var(--text); border: 1px solid var(--border-hi); background: var(--raised); padding: 5px 10px; border-radius: 4px; }
+    .status li { list-style: none; display: grid; grid-template-columns: 18px 1fr; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+    .status { padding: 0; margin: 8px 0 0; }
+    .status .ok { color: var(--profit); }
+    .status .todo { color: var(--muted); }
+
+    /* Disclaimer + footer */
+    .disclaimer { background: var(--panel); border: 1px solid var(--border); border-left: 2px solid var(--gold); border-radius: 6px; padding: 18px 20px; font-size: 14px; color: var(--muted); }
+    .disclaimer b { color: var(--text); }
+    footer { border-top: 1px solid var(--border); padding: 28px 0 40px; font-size: 13px; color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 880px) {
+      .hero, .two { grid-template-columns: 1fr; gap: 36px; }
+      .hero { padding-top: 64px; padding-bottom: 48px; }
+      .flow { grid-template-columns: 1fr 1fr; }
+      .step:not(:last-child)::after { display: none; }
+      .rules { grid-template-columns: 1fr; }
+      nav { display: none; }
+    }
+    @media (max-width: 520px) {
+      .flow { grid-template-columns: 1fr; }
+      .card-foot { grid-template-columns: 1fr; }
+      .card-foot div { border-right: 0; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap bar">
+      <div class="mark">GP</div>
+      <div class="brand">GLIDEPATH<span>PERSONAL PROJECT</span></div>
+      <nav>
+        <a href="#what">What it is</a>
+        <a href="#how">How it works</a>
+        <a href="#principles">Principles</a>
+        <a href="#status">Status</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <div class="eyebrow">Built by Dami Ige · for my own accounts</div>
+        <h1>Discipline, <em>engineered.</em></h1>
+        <p class="lede">GlidePath is my personal trading engine: it takes signals from my own rule-based strategies and decides — with hard, non-negotiable limits — whether a trade is allowed, how large it can be, and how it is managed until it closes.</p>
+        <div class="note"><span class="dot"></span>Private, single-user software. Not a product, service or signal provider.</div>
+      </div>
+
+      <div class="card" aria-label="Risk per trade falls smoothly as the account grows">
+        <div class="card-head">Glide path · risk per trade vs equity <b>sampled from the engine</b></div>
+        <svg class="chart" viewBox="0 0 480 230" role="img" aria-label="A curve starting at 3% risk that glides down to 0.5% as equity approaches target capital">
+          <g class="grid"><path d="M44 28H462M44 78H462M44 128H462M44 178H462" /></g>
+          <g class="axis">
+            <text x="6" y="32">3.0%</text><text x="6" y="82">2.2%</text><text x="6" y="132">1.4%</text><text x="6" y="182">0.5%</text>
+            <text x="40" y="210">0</text><text x="248" y="210">½ target</text><text x="420" y="210">target</text>
+          </g>
+          <path class="target" d="M440 18V190" />
+          <text class="tlabel" x="434" y="14" text-anchor="end">TARGET CAPITAL</text>
+          <path class="glow" d="M44 32 L127 32 C200 34 250 70 300 118 S400 176 440 178 L462 178" />
+          <path class="curve" d="M44 32 L127 32 C200 34 250 70 300 118 S400 176 440 178 L462 178" />
+          <g class="zone"><text x="56" y="168">AGGRESSIVE</text><text x="214" y="168">TRANSITION</text><text x="352" y="72">CONSERVATIVE →</text></g>
+          <circle cx="96" cy="32" r="10" fill="#e8b33c26" /><circle cx="96" cy="32" r="4.5" fill="#E8B33C" />
+        </svg>
+        <div class="card-foot">
+          <div><div class="k">Stop at broker</div><div class="v">Always</div></div>
+          <div><div class="k">Daily halt</div><div class="v">Hard</div></div>
+          <div><div class="k">Approval</div><div class="v">Human</div></div>
+        </div>
+      </div>
+    </div>
+
+    <section id="what">
+      <div class="wrap two">
+        <div>
+          <h2>What it is</h2>
+          <p class="h2-big">A risk layer between an idea and an order.</p>
+        </div>
+        <div>
+          <p>Most trading accounts aren't lost to bad ideas — they're lost to position sizes that were too big, a losing day that kept going, or a rule broken in the moment. GlidePath exists to make those mistakes structurally impossible on my own accounts.</p>
+          <p>Strategies describe <em>what</em> they want to do. GlidePath alone decides <em>whether</em> and <em>how much</em> — sizing every order from its stop distance and a fixed fraction of equity, placing it with a protective stop, and refusing anything that would breach a limit.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <p class="h2-big">Four stages, one direction of travel.</p>
+        <div class="flow">
+          <div class="step"><h3>Signal</h3><p>My own rule-based strategies emit a structured, authenticated alert: direction, entry, stop and targets. No sizing.</p></div>
+          <div class="step"><h3>Risk gate</h3><p>Every limit is checked first — drawdown, daily loss, losing streaks, correlated exposure, trade budget. Size comes from the stop.</p></div>
+          <div class="step"><h3>Approval</h3><p>By default I confirm each trade myself, with the exact size and money at risk in front of me, before anything is sent.</p></div>
+          <div class="step"><h3>Execution</h3><p>Orders go to my broker with the stop attached, then partials, break-even and trailing are managed and reconciled against the broker.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="principles">
+      <div class="wrap">
+        <h2>Principles</h2>
+        <p class="h2-big">Rules that only ever reduce risk.</p>
+        <div class="rules">
+          <div class="rule"><div class="k">01</div><h3>Every order is protected</h3><p>The stop-loss lives at the broker from the first tick. If it can't be placed, the position is closed immediately.</p></div>
+          <div class="rule"><div class="k">02</div><h3>Size follows the stop</h3><p>Fixed-fractional sizing including costs, always rounded down. A wider stop means a smaller position — never more risk.</p></div>
+          <div class="rule"><div class="k">03</div><h3>Days end on a limit</h3><p>A daily loss limit, a stop after consecutive losses, and a profit cap end the session automatically. No exceptions.</p></div>
+          <div class="rule"><div class="k">04</div><h3>No averaging into losers</h3><p>There is no code path that adds size to a losing position. No martingale, no grid, no doubling down.</p></div>
+          <div class="rule"><div class="k">05</div><h3>Friction is a feature</h3><p>Locking the account is one click; unlocking needs a written reason and an enforced cool-down.</p></div>
+          <div class="rule"><div class="k">06</div><h3>Broker truth wins</h3><p>Positions are reconciled against the broker on a timer. Anything unexpected is flattened and the account locks.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="status">
+      <div class="wrap two">
+        <div>
+          <h2>Under the hood</h2>
+          <p class="h2-big">Small, typed, tested.</p>
+          <p>A headless TypeScript engine with a dashboard client. The risk engine is a set of pure functions with a self-verifying test suite, including Monte Carlo runs on deliberately hostile sequences.</p>
+          <div class="chips">
+            <span class="chip">TypeScript</span><span class="chip">Node.js</span><span class="chip">SQLite</span>
+            <span class="chip">React</span><span class="chip">cTrader Open API</span><span class="chip">TradingView alerts</span>
+          </div>
+        </div>
+        <div>
+          <h2>Status</h2>
+          <ul class="status">
+            <li><span class="ok mono">✓</span>Risk engine, governors and compliance limits</li>
+            <li><span class="ok mono">✓</span>Order management and paper execution</li>
+            <li><span class="ok mono">✓</span>Signal gateway and dashboard</li>
+            <li><span class="todo mono">○</span>Broker connection — demo account first</li>
+            <li><span class="todo mono">○</span>Strategy validation before any real capital</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="disclaimer">
+          <b>Personal project.</b> GlidePath trades only my own accounts. It is not offered to anyone else, does not manage third-party money, and does not publish or sell signals. Nothing on this page is financial advice, and no part of it claims or implies any trading performance.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span class="mono" id="y">2026</span> Dami Ige · GlidePath</span>
+      <span class="mono">Built for one user. Tested like it matters.</span>
+    </div>
+  </footer>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+</body>
+</html>
